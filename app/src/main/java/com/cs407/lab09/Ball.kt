@@ -23,7 +23,7 @@ class Ball(
     private var isFirstUpdate = true
 
     init {
-        // TODO: Call reset()
+        reset()
     }
 
     /**
@@ -38,6 +38,14 @@ class Ball(
             return
         }
 
+        posX += velocityX * dT + (1f/6f)*(dT*dT)*(2*accX + xAcc)
+        posY += velocityY * dT + (1f/6f)*(dT*dT)*(2*accY + yAcc)
+
+        velocityX += accX*dT + ((xAcc - accX)/2f) * dT
+        velocityY += accY*dT + ((yAcc - accY)/2f) * dT
+
+        accX = xAcc
+        accY = yAcc
     }
 
     /**
@@ -45,9 +53,34 @@ class Ball(
      * When it collides, velocity and acceleration perpendicular to the
      * boundary should be set to 0.
      */
+    // Ball.kt -> checkBoundaries
+
     fun checkBoundaries() {
-        // TODO: implement the checkBoundaries function
-        // (Check all 4 walls: left, right, top, bottom)
+        // Right Wall
+        if (posX + ballSize / 2f >= backgroundWidth) {
+            posX = backgroundWidth - ballSize / 2f // Clamp position
+            velocityX = 0f
+            accX = 0f
+        }
+        // Left Wall
+        else if (posX - ballSize / 2f <= 0f) {
+            posX = ballSize / 2f // Clamp position
+            velocityX = 0f
+            accX = 0f
+        }
+
+        // Bottom Wall
+        if (posY + ballSize / 2f >= backgroundHeight) {
+            posY = backgroundHeight - ballSize / 2f // Clamp position
+            velocityY = 0f
+            accY = 0f
+        }
+        // Top Wall
+        else if (posY - ballSize / 2f <= 0f) {
+            posY = ballSize / 2f // Clamp position
+            velocityY = 0f
+            accY = 0f
+        }
     }
 
     /**
@@ -55,7 +88,13 @@ class Ball(
      * velocity and acceleration.
      */
     fun reset() {
-        // TODO: implement the reset function
         // (Reset posX, posY, velocityX, velocityY, accX, accY, isFirstUpdate)
+        isFirstUpdate = true
+        posX = backgroundWidth / 2f
+        posY = backgroundHeight / 2f
+        velocityX = 0f
+        velocityY = 0f
+        accX = 0f
+        accY = 0f
     }
 }
